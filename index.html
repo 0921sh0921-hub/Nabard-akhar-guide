@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>🏰 راهنمای پادشاهی</title>
+
+    <!-- فونت وزیر از CDN -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazir', 'Tahoma', sans-serif;
+            background: #120a07;
+            color: #ecd6b0;
+            min-height: 100vh;
+            padding: 16px 12px 40px;
+            background-image: radial-gradient(ellipse at 20% 50%, #2a1a10 0%, #120a07 70%);
+        }
+
+        /* ===== هدر طلایی ===== */
+        .gold-header {
+            background: linear-gradient(145deg, #3d2618, #281a10);
+            border: 1px solid #b8944a;
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 25px rgba(184, 148, 74, 0.15);
+        }
+
+        .gold-header .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f5e2c1;
+            text-shadow: 0 0 12px rgba(184, 148, 74, 0.25);
+            letter-spacing: 1px;
+        }
+
+        .gold-header .subtitle {
+            font-size: 13px;
+            color: #b8944a;
+            font-weight: 300;
+        }
+
+        /* ===== دکمه‌های منو (مثل ربات) ===== */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .menu-btn {
+            background: linear-gradient(145deg, #2d1b12, #1f110a);
+            border: 1px solid #6b4f38;
+            border-radius: 14px;
+            padding: 16px 8px;
+            text-align: center;
+            color: #ecd6b0;
+            font-family: 'Vazir', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .menu-btn .icon {
+            font-size: 26px;
+            display: block;
+        }
+
+        .menu-btn .label {
+            font-size: 13px;
+            color: #b8944a;
+            font-weight: 300;
+        }
+
+        .menu-btn:active {
+            transform: scale(0.96);
+            border-color: #b8944a;
+            background: linear-gradient(145deg, #3d2618, #281a10);
+        }
+
+        /* دکمه‌های تمام‌عرض (برای بعضی ردیف‌ها) */
+        .menu-btn.full {
+            grid-column: 1 / -1;
+        }
+
+        /* ===== صفحه راهنما (پنهان در ابتدا) ===== */
+        .guide-page {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .guide-page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .guide-card {
+            background: linear-gradient(160deg, #23170f, #160e09);
+            border: 1px solid #6b4f38;
+            border-radius: 18px;
+            padding: 22px 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .guide-card .guide-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #f5e2c1;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #4a3525;
+            padding-bottom: 10px;
+        }
+
+        .guide-card .guide-title .emoji-big {
+            font-size: 30px;
+        }
+
+        .guide-card .guide-body {
+            font-size: 15px;
+            line-height: 1.9;
+            color: #dcc9b0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .guide-card .guide-body strong {
+            color: #f5e2c1;
+            font-weight: 600;
+        }
+
+        .guide-card .guide-body .highlight {
+            color: #b8944a;
+        }
+
+        /* دکمه بازگشت */
+        .back-btn {
+            background: linear-gradient(145deg, #3d2618, #281a10);
+            border: 1px solid #6b4f38;
+            border-radius: 14px;
+            padding: 14px;
+            text-align: center;
+            color: #ecd6b0;
+            font-family: 'Vazir', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        .back-btn:active {
+            transform: scale(0.97);
+            border-color: #b8944a;
+        }
+
+        /* ===== منوی اصلی (پنهان/نمایش) ===== */
+        .main-menu {
+            display: block;
+        }
+
+        .main-menu.hidden {
+            display: none;
+        }
+
+        /* ===== اسکرول‌بار زیبا ===== */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #120a07;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #b8944a;
+            border-radius: 4px;
+        }
+
+        /* ===== ریسپانسیو ===== */
+        @media (max-width: 480px) {
+            .menu-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .menu-btn {
+                padding: 14px 6px;
+                font-size: 13px;
+            }
+            .menu-btn .icon {
+                font-size: 22px;
+            }
+            .gold-header .title {
+                font-size: 17px;
+            }
+            .guide-card .guide-title {
+                font-size: 19px;
+            }
+            .guide-card .guide-body {
+                font-size: 14px;
+                line-height: 1.8;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .menu-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .menu-btn {
+                padding: 10px 4px;
+                font-size: 12px;
+            }
+            .menu-btn .icon {
+                font-size: 18px;
+            }
+            .menu-btn .label {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== هدر ===== -->
+    <div class="gold-header">
+        <span class="title">🏰 راهنمای پادشاهی</span>
+        <span class="subtitle">کامل &amp; تعاملی</span>
+    </div>
+
+    <!-- ===== منوی اصلی ===== -->
+    <div id="mainMenu" class="main-menu">
+        <div class="menu-grid">
+
+            <!-- ردیف ۱: سرزمین من (تمام‌عرض) -->
+            <button class="menu-btn full" data-guide="my_kingdom">
+                <span class="icon">🌍</span>
+                سرزمین من
+                <span class="label">نمایش پادشاهی</span>
+            </button>
+
+            <!-- ردیف ۲: کشاورزی + ساختمان -->
+            <button class="menu-btn" data-guide="farming">
+                <span class="icon">🌾</span>
+                کشاورزی
+                <span class="label">برداشت منابع</span>
+            </button>
+            <button class="menu-btn" data-guide="buildings">
+                <span class="icon">🏗️</span>
+                ساختمان
+                <span class="label">کارخانه‌ها</span>
+            </button>
+
+            <!-- ردیف ۳: ارتش + بیمارستان -->
+            <button class="menu-btn" data-guide="army">
+                <span class="icon">⚔️</span>
+                ارتش
+                <span class="label">سربازان</span>
+            </button>
+            <button class="menu-btn" data-guide="hospital">
+                <span class="icon">🏥</span>
+                بیمارستان
+                <span class="label">نجات زخمی‌ها</span>
+            </button>
+
+            <!-- ردیف ۴: جامعه + جنگ -->
+            <button class="menu-btn" data-guide="community">
+                <span class="icon">🧑</span>
+                جامعه
+                <span class="label">اتحاد و رفرال</span>
+            </button>
+            <button class="menu-btn" data-guide="war">
+                <span class="icon">⚔️</span>
+                جنگ
+                <span class="label">نبرد و برج‌ها</span>
+            </button>
+
+            <!-- ردیف ۵: نبرد رویایی + فروشگاه -->
+            <button class="menu-btn" data-guide="campaign">
+                <span class="icon">✨</span>
+                نبرد رویایی
+                <span class="label">نجات شاهزاده</span>
+            </button>
+            <button class="menu-btn" data-guide="shop">
+                <span class="icon">🛒</span>
+                فروشگاه
+                <span class="label">خرید با ریال</span>
+            </button>
+
+            <!-- ردیف ۶: پشتیبانی + تنظیمات (تمام‌عرض) -->
+            <button class="menu-btn" data-guide="support">
+                <span class="icon">🛡️</span>
+                پشتیبانی
+                <span class="label">ارتباط با ادمین</span>
+            </button>
+            <button class="menu-btn" data-guide="settings">
+                <span class="icon">⚙️</span>
+                تنظیمات
+                <span class="label">تغییر نام و کد</span>
+            </button>
+
+        </div>
+    </div>
+
+    <!-- ===== صفحات راهنما (همگی پنهان) ===== -->
+    <div id="guideContainer" class="guide-page">
+        <div class="guide-card">
+            <div class="guide-title" id="guideTitle">
+                <span class="emoji-big">📜</span>
+                <span id="guideTitleText">عنوان</span>
+            </div>
+            <div class="guide-body" id="guideBody">
+                <!-- متن توضیحات اینجا درج می‌شود -->
+            </div>
+        </div>
+        <button class="back-btn" onclick="showMainMenu()">🔙 بازگشت به منوی اصلی</button>
+    </div>
+
+    <script>
+        // ============================================================
+        //  دیکشنری توضیحات کامل (همون چیزایی که گفتی)
+        // ============================================================
+        const GUIDES = {
+
+            // ---------- سرزمین من ----------
+            my_kingdom: {
+                title: '🌍 سرزمین من (پادشاهی)',
+                body: `این دروازه، قلب قلمرو توست. هر پادشاهی از اینجا فرمانروایی می‌کند، منابع و گنجینه‌اش را می‌سنجد، سپر و تاجش را بازمی‌بیند.
+
+        🏰 خزانه شاهی: گنجینه‌ی پنهان قلمرو. طلا، منابع خام (پشم، چرم، چوب، گندم، آهن) و محصولات کارخانه‌ها را در اینجا می‌بینی.
+
+        📜 جزئیات پادشاهی: آیینه‌ی تمام‌نمای عظمت تو. نام، شعار، قدرت حمله و دفاع کل، سطح پادشاهی، وضعیت سپر و VIP، و تعداد سربازانت را نشان می‌دهد.
+
+        🛡️ سپر محافظ: دژی نامرئی بر فراز قلمروت. تا زمانی که فعال است، هیچکس نمی‌تواند به تو حمله کند و تو نیز نمی‌توانی حمله کنی.
+
+        👑 قلمرو شاهزاده: پس از نجات شاهزاده از چنگ اهریمن، این بخش گشوده می‌شود و هر روز سه مأموریت جدید برایت می‌گمارد.
+
+        🏪 بازار بزرگ شاهی: میدان دادوستد پادشاهی. هر کالا به نرخ روز خرید و فروش می‌شود. قیمت‌ها هر ۹۰ دقیقه یکبار دگرگون می‌شوند.`
+            },
+
+            // ---------- کشاورزی ----------
+            farming: {
+                title: '🌾 کشاورزی (مزارع)',
+                body: `اینجا خاک سخن می‌گوید و دانه‌ها نوید فتح می‌دهند. پنج گوهر کشاورزی:
+
+        🐑 پشم: نرم‌ترین الیاف، ماده‌ی اولیه‌ی نساجی. برای تولید جامه‌های فاتحان و منسوجات نظامی به کار می‌رود.
+
+        🦬 چرم: مقاوم‌ترین ماده‌ی طبیعی، ماده‌ی اولیه‌ی دباغی. برای تولید زره، کمربند و پوشش‌های جنگی استفاده می‌شود.
+
+        🪵 چوب: ستون فقرات صنعت، ماده‌ی اولیه‌ی چوب‌بری. برای تولید کمان، نیزه، ارابه و سازه‌های چوبی به کار می‌رود.
+
+        🌾 گندم: برکت زمین، ماده‌ی اولیه‌ی آسیاب. برای تولید آرد، نان و خوراک لشکر استفاده می‌شود.
+
+        ⛏️ آهن: سخت‌ترین فلز، ماده‌ی اولیه‌ی آهنگری. برای تولید شمشیر، زره، گرز و ارابه‌های جنگی آهنی به کار می‌رود.
+
+        هر برداشت، نفس تازه‌ای به پادشاهی می‌دمد. مزرعه‌ات را ارتقا بده تا زمین بارورتر شود و محصول افزون‌تر.`
+            },
+
+            // ---------- ساختمان ----------
+            buildings: {
+                title: '🏗️ ساختمان‌ها (کارخانه‌ها)',
+                body: `پنج آتشکده‌ی صنعت که خام‌ها را به جامه و سلاح و سازه بدل می‌کنند:
+
+        🧵 نساجی: پشم را به جامه و منسوجات بدل می‌کند. محصولات: الیاف مصنوعی، نخ، پارچه، گلیم، فرش دستباف، منسوجات پزشکی، شال گردن، منسوجات نظامی.
+
+        🌾 آسیاب: گندم را به آرد و نان تبدیل می‌کند. محصولات: آرد، خمیر نان، نان ساده، کیک، بیسکویت، نان سنگک، شیرینی زنجبیلی، کلوچه، نان فانتزی، کیک چندلایه.
+
+        🪵 چوب‌بری: چوب را به ابزار و سازه بدل می‌کند. محصولات: تخته چوبی، چوبدست، نیزه چوبی، کمان ساده، صندلی چوبی، درب چوبی، کابینت، تخت چوبی، قایق کوچک، ارابه جنگی.
+
+        🧵 دباغی: چرم را به زره و پوشش بدل می‌کند. محصولات: کمربند چرمی، کیف چرمی، کفش چرمی، کلاه چرمی، دستکش چرمی، کاور زرهی، زره چرمی، کوله پشتی، کمربند نظامی.
+
+        ⚒️ آهنگری: آهن را به سلاح و زره بدل می‌کند. محصولات: شمش آهن، میخ، تبر آهنی، شمشیر، زره سینه، خود، پنجه، گرز، نیزه آهنی، زره کامل، ارابه جنگی آهنی.
+
+        هرچه سطح کارخانه‌ها را بالا ببری، محصولات متنوع‌تر و زمان تولید کوتاه‌تر می‌شود.`
+            },
+
+            // ---------- ارتش ----------
+            army: {
+                title: '⚔️ ارتش (شش سپاه)',
+                body: `لشکر شش‌گانه‌ات، بازوان پولادین تو:
+
+        🗡️ سامورایی: شرافتمندترین جنگجویان، تهاجمی. حمله‌ای کوبنده و دفاعی استوار. برای شکستن خط دفاعی دشمن بی‌همتایند.
+
+        🥷 نینجا: سایه‌های مرگبار، تهاجمی. ضربات غافلگیرانه و سریع. برای نفوذ به عمق سپاه دشمن و زدن ضربات مهلک به فرماندهان.
+
+        🐎 سواره نظام آهنین: سپر مستحکم، تدافعی. با زره‌های آهنین و نیزه‌های بلند، در برابر حملات سنگین می‌ایستند و صفوف دشمن را درهم می‌شکنند.
+
+        🐉 اژدها سوار: آتش‌افشانان آسمان، متعادل. از آسمان بر دشمن آتش می‌بارند و قلب سپاه او را نشانه می‌گیرند.
+
+        ⚔️ شمشیرزن: دلاوران همه‌کاره، متعادل. هم در حمله و هم در دفاع مهارتی بی‌نظیر دارند. در هر شرایطی می‌جنگند.
+
+        🏹 کماندار: تیرهای مرگبار از پس سپرها، تدافعی. از فاصله‌ای دور، تیرهایی بر قلب دشمن می‌نشانند و صفوف او را در هم می‌شکنند.
+
+        هر سرباز تا سطح ۱۵ ارتقا می‌یابد. با VIP و رویدادها، هزینه‌های آموزش و ارتقا کاهش می‌یابد.`
+            },
+
+            // ---------- بیمارستان ----------
+            hospital: {
+                title: '🏥 بیمارستان',
+                body: `اینجا محل التیام زخم‌های جنگ است. سربازان زخمی پس از هر نبرد به اینجا می‌آیند تا دوباره جان بگیرند.
+
+        🩺 نجات رایگان: هر روز، درصدی از زخمی‌ها به‌صورت رایگان نجات می‌یابند (میزان آن به سطح بیمارستان بستگی دارد).
+
+        ⚕️ نجات انتخابی: می‌توانی با پرداخت طلا، تعداد مشخصی از یک نوع سرباز را نجات دهی.
+
+        🩹 بهبود جمعی: همه‌ی زخمی‌ها را یکجا و با تخفیف نجات بده.
+
+        💀 کشته شب: هر شب، ۱۵٪ از زخمی‌ها جان خود را از دست می‌دهند (مگر اینکه نجاتشان دهی).
+
+        ⬆️ ارتقا: با ارتقای بیمارستان، درصد نجات رایگان و تبدیل تلفات به زخمی افزایش می‌یابد.
+
+        بیمارستان را قوی کن تا سربازان بیش‌تری را نجات دهی و ارتش را پایدار نگه داری.`
+            },
+
+            // ---------- جامعه ----------
+            community: {
+                title: '🧑 جامعه',
+                body: `اینجا نیایشگاه همبستگی است:
+
+        🏛️ اتحاد: با ۵۰۰ طلا اتحاد بساز (حداکثر ۱۰ عضو). اعضا می‌توانند منابع اهدا کنند، سرباز پنهان کنند و به یکدیگر سرباز انتقال دهند. برج‌های حماسی نیز توسط اتحادها تصاحب می‌شوند.
+
+        📢 بیانیه: صدای پادشاهی در سراسر سرزمین. بیانیه‌ات در کانال رسمی منتشر می‌شود. (حداقل ۱۵ کاراکتر، حداکثر ۱۰۰۰)
+
+        🏆 لیدربورد: تالار مشاهیر. هفت دسته‌ی رقابتی (قدرت، ثروت، اتحاد، کشاورزی، تولید، منابع، فروش). هر جمعه جوایز ارزشمند توزیع می‌شود.
+
+        🎯 ماموریت: چهار سطح (مبتدی، متوسط، سخت، غیرممکن). با انجام اهداف (انتقال، برداشت، فروش، آموزش) در ۷ روز، پاداش بگیر.
+
+        🤝 رفرال: با دعوت از دوستان، هر دو ۲,۰۰۰ طلا پاداش می‌گیرید. لینک اختصاصی خود را دریافت کن.
+
+        ✨ رویدادهای پادشاهی: برکت‌های موقتی که توسط ادمین فعال می‌شوند. برداشت دوبرابر، تخفیف آموزش، تولید سریع.`
+            },
+
+            // ---------- جنگ ----------
+            war: {
+                title: '⚔️ جنگ',
+                body: `اینجا میدان خون و آتش است:
+
+        🎲 حمله تصادفی: به یک پادشاهی تصادفی (که سپر ندارد و هم‌اتحادی نیست) حمله کن.
+
+        🎯 حمله با نام: نام پادشاهی حریف را وارد کن و به او حمله کن.
+
+        🏰 برج‌های حماسی: چهار برج اساطیری که هر جمعه نبرد می‌شوند. هر برج بونوس ویژه‌ای به اتحاد برنده می‌دهد:
+           • دیوار ماریا (⚔️) – ۲۰٪ افزایش حمله و دفاع
+           • وینلند (🌾) – ۲۰٪ کاهش زمان برداشت و افزایش محصول
+           • رزمبل (🏭) – ۲۰٪ کاهش زمان تولید کارخانه‌ها
+           • هاگوارتز (🎯) – ۲۰٪ کاهش هزینه و زمان ارتقای سربازان
+
+        📜 تاریخچه جنگ: ببین در چه نبردهایی شرکت کرده‌ای و نتیجه‌ی آن‌ها چه بوده.
+
+        جنگ، آزمون نهایی فرماندهی توست. با قدرت و تدبیر، دشمن را در هم بکوب.`
+            },
+
+            // ---------- نبرد رویایی ----------
+            campaign: {
+                title: '✨ نبرد رویایی',
+                body: `حماسه‌ای برای نجات شاهزاده‌ی ربوده‌شده از چنگ اهریمن پنج‌سر.
+
+        🏰 پنج دژ، هر یک پانزده مرحله:
+           • دژ نخست: اهریمن سنگی – دروازه‌ی ورودی به تاریکی
+           • دژ دوم: روح خبیث – سرزمین ارواح ملعون
+           • دژ سوم: فرمانده پلید – مقر استراتژیست جنگی
+           • دژ چهارم: اژدهای آتشین – آشیانه‌ی هیولای بالدار
+           • دژ پنجم: اهریمن پنج‌سر – آخرین سنگر تاریکی و محل اسارت شاهزاده
+
+        ⚔️ هر حمله ۵ دقیقه به طول می‌انجامد. در خلال آن، گزارش‌هایی از روند نبرد دریافت می‌کنی.
+
+        🎁 پاداش‌ها: مراحل عادی پاداش دارند، باس‌ها پاداش ویژه، و پیروزی بر اهریمن، نشان حماسی و رهایی شاهزاده را به همراه دارد.
+
+        👑 پس از نجات، قلمرو شاهزاده گشوده می‌شود و هر روز سه مأموریت جدید دریافت می‌کنی.
+
+        هر روز ۱۰ حمله‌ی رایگان داری. پس از آن، هر حمله ۵۰۰ طلا هزینه دارد.`
+            },
+
+            // ---------- فروشگاه ----------
+            shop: {
+                title: '🛒 فروشگاه شاهی',
+                body: `اینجا خزانه‌ی پنهان پادشاهی‌ست؛ جایی که با ریال، اهرم‌های قدرت را یک‌جا تهیه می‌کنی:
+
+        💎 پک‌های VIP: تاجی از برکت. کاهش ۲۵٪ هزینه‌ی آموزش، زمان برداشت، زمان تولید و افزایش ۲۵٪ محصولات مزارع.
+
+        📦 پک‌های منابع: انباری از گنجینه‌های زمین. پشم، چرم، چوب، گندم و آهن به مقدار بسیار در اختیار تو.
+
+        🛡️ پک‌های شیلد: سپری از جنس ایمنی. یک هفته، دو هفته یا یک ماه محافظت کامل در برابر حملات.
+
+        💰 پک‌های طلا: زرّی که هر دروازه‌ای را می‌گشاید. برای آموزش، ارتقا، خرید شیلد و هر هزینه‌ی دیگر.
+
+        🎖️ پک‌های سرباز: لشکری آماده‌به‌رزم در یک چشم‌به‌هم‌زدن. سامورایی، نینجا، سواره نظام، اژدها سوار، شمشیرزن یا کماندار – هرکدام در بالاترین سطح.
+
+        💳 حمایت مالی: هر مبلغی که دلت خواست، به پایداری این سرزمین یاری برسان.`
+            },
+
+            // ---------- پشتیبانی ----------
+            support: {
+                title: '🛡️ پشتیبانی',
+                body: `اینجا پل ارتباطی با ادمین و راهنمای بازی است:
+
+        📞 ارتباط با ادمین: هر سوال، مشکل یا پیشنهاد را از این راه با فرمانده‌ی کل در میان بگذار.
+
+        ❓ سوالات متداول: پاسخ به سوالات رایج کاربران.
+
+        📖 راهنمای بازی: خلاصه‌ای از تمام قابلیت‌های پادشاهی.
+
+        💳 حمایت مالی: از این بخش می‌توانی از پادشاهی حمایت مالی کنی.
+
+        همه‌ی درخواست‌ها در اسرع وقت بررسی می‌شوند.`
+            },
+
+            // ---------- تنظیمات ----------
+            settings: {
+                title: '⚙️ تنظیمات',
+                body: `اینجا جای تغییر نام پادشاهی و وارد کردن کدهای هدیه است:
+
+        ✏️ تغییر نام پادشاهی: نام خود را به نامی تازه و پرشکوه دگرگون کن. (فقط حروف فارسی، ۳ تا ۲۰ حرف، نباید تکراری باشد)
+
+        🎁 وارد کردن کد هدیه: کدهایی که توسط ادمین ساخته شده‌اند را وارد کن و جوایز ارزنده‌ای دریافت کن.
+
+        قلمروی خود را با نامی نو و با هدایایی از گذشتگان، آراسته‌تر کن.`
+            }
+
+        }; // پایان GUIDES
+
+
+        // ============================================================
+        //  منطق نمایش/مخفی‌سازی
+        // ============================================================
+        const mainMenu = document.getElementById('mainMenu');
+        const guideContainer = document.getElementById('guideContainer');
+        const guideTitleText = document.getElementById('guideTitleText');
+        const guideBody = document.getElementById('guideBody');
+        const guideTitleEmoji = document.querySelector('.guide-title .emoji-big');
+
+        // نمایش راهنما با کلیک روی دکمه‌ها
+        document.querySelectorAll('[data-guide]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const key = this.dataset.guide;
+                const data = GUIDES[key];
+                if (!data) {
+                    showToast('❌ راهنمایی برای این بخش یافت نشد.');
+                    return;
+                }
+
+                // تنظیم عنوان و متن
+                // استخراج ایموجی از عنوان (قسمت اول)
+                const titleParts = data.title.split(' ');
+                const emoji = titleParts[0] || '📜';
+                const titleWithoutEmoji = titleParts.slice(1).join(' ') || data.title;
+
+                guideTitleEmoji.textContent = emoji;
+                guideTitleText.textContent = titleWithoutEmoji;
+                guideBody.textContent = data.body;
+
+                // نمایش صفحه راهنما، مخفی کردن منو
+                mainMenu.classList.add('hidden');
+                guideContainer.classList.add('active');
+                guideContainer.style.display = 'block';
+
+                // اسکرول به بالا
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // بازگشت به منوی اصلی
+        window.showMainMenu = function() {
+            mainMenu.classList.remove('hidden');
+            guideContainer.classList.remove('active');
+            guideContainer.style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // ============================================================
+        //  Toast (اخطار)
+        // ============================================================
+        function showToast(msg) {
+            // اخطار ساده - در صورت نیاز می‌توان زیباتر کرد
+            alert(msg);
+        }
+
+        // اگر صفحه راهنما به‌صورت ناخواسته نمایش داده شد، مخفی کن
+        // (برای مواقعی که مستقیماً بارگذاری می‌شود)
+        document.addEventListener('DOMContentLoaded', function() {
+            guideContainer.style.display = 'none';
+        });
+
+        console.log('🏰 راهنمای پادشاهی بارگذاری شد.');
+        console.log('📜 برای مشاهده‌ی هر بخش، روی دکمه‌ها کلیک کن.');
+    </script>
+
+</body>
+</html>
